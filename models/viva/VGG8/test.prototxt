@@ -303,7 +303,7 @@ layer {
 layer {
   name: "rpn_conv/3x3"
   type: "Convolution"
-  bottom: "conv5_3"
+  bottom: "conv4_3"
   top: "rpn/output"
   param { lr_mult: 1.0 decay_mult: 1.0 }
   param { lr_mult: 2.0 decay_mult: 0 }
@@ -382,7 +382,7 @@ layer {
   python_param {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
-    param_str: "'feat_stride': 16"
+    param_str: "'feat_stride': 8"
   }
 }
 
@@ -391,7 +391,7 @@ layer {
 layer {
   name: "roi_pool5"
   type: "ROIPooling"
-  bottom: "conv5_3"
+  bottom: "conv4_3"
   bottom: "rois"
   top: "pool5"
   roi_pooling_param {
