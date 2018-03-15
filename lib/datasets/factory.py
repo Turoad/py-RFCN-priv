@@ -17,21 +17,22 @@ from datasets.voc_0712_trainval import voc_0712_trainval
 from datasets.voc_07trainvaltest_12trainval import voc_07trainvaltest_12trainval
 from datasets.coco21trainval_voc0712trainval import coco21trainval_voc0712trainval
 
-from datasets.coco81_trainval35k import coco81_trainval35k
-from datasets.coco81_trainval import coco81_trainval
+# from datasets.coco81_trainval35k import coco81_trainval35k
+# from datasets.coco81_trainval import coco81_trainval
 from datasets.mscoco2017_81trainval import mscoco2017_81trainval
 
 from datasets.wider_face_trainval import wider_face_trainval
 
 from datasets.ilsvrc2017_det_train import ilsvrc2017_det_train
+from datasets.viva import viva
 
 
 
 __sets['voc_0712_trainval'] = voc_0712_trainval
 __sets['voc_07trainvaltest_12trainval'] = voc_07trainvaltest_12trainval
 __sets['coco21trainval_voc0712trainval'] = coco21trainval_voc0712trainval
-__sets['coco81_trainval35k'] = coco81_trainval35k
-__sets['coco81_trainval'] = coco81_trainval
+# __sets['coco81_trainval35k'] = coco81_trainval35k
+# __sets['coco81_trainval'] = coco81_trainval
 __sets['mscoco2017_81trainval'] = mscoco2017_81trainval
 __sets['wider_face_trainval'] = wider_face_trainval
 __sets['ilsvrc2017_det_train'] = ilsvrc2017_det_train
@@ -55,6 +56,9 @@ for year in ['2015']:
         name = 'coco_{}_{}'.format(year, split)
         __sets[name] = (lambda split=split, year=year: coco(split, year))
 
+for split in ['train', 'val', 'trainval', 'test']:
+    name = 'viva_{}'.format(split)
+    __sets[name] = (lambda split=split:viva(split))
 
 def get_imdb(name):
     """Get an imdb (image database) by name."""

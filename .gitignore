@@ -1,0 +1,11 @@
+*/*.pyc
+*/*/*.pyc
+
+data/*
+
+# vim
+*.un~
+*.swp
+*.DS_Store
+
+output/*

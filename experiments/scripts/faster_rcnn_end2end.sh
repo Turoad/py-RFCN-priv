@@ -38,6 +38,12 @@ case $DATASET in
     PT_DIR="coco"
     ITERS=490000
     ;;
+  viva)
+    TRAIN_IMDB="viva_trainval"
+    TEST_IMDB="viva_test"
+    PT_DIR="viva"
+    ITERS=200000
+    ;;
   *)
     echo "No dataset given"
     exit
@@ -55,7 +61,6 @@ time ./tools/train_net.py --gpu ${GPU_ID} \
   --iters ${ITERS} \
   --cfg experiments/cfgs/faster_rcnn_end2end.yml \
   ${EXTRA_ARGS}
-
 set +x
 NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
 set -x
