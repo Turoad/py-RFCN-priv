@@ -65,10 +65,10 @@ def overlap(x1, len1, x2, len2):
     return right - left
 # hyper parameters
 label_path = "../data/VIVAdevkit/Labels/"
-n_anchors = 9 
+n_anchors = 9
 loss_convergence = 1e-5
-image_width = 960 
-image_height = 1280 
+image_width = 960
+image_height = 1280
 grid_width = 16
 grid_height = 16
 
@@ -110,8 +110,10 @@ def do_kmeans(n_anchors, boxes, centroids):
         new_centroids[group_index].h += box.h
 
     for i in range(n_anchors):
-        new_centroids[i].w /= len(groups[i])
-        new_centroids[i].h /= len(groups[i])
+        # print 'i=',i, 'len = ',len(groups[i])
+        if len(groups[i]) == 0: continue
+        new_centroids[i].w /= float(len(groups[i]))
+        new_centroids[i].h /= float(len(groups[i]))
 
     return new_centroids, groups, loss
 

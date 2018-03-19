@@ -1,6 +1,8 @@
 */*.pyc
 */*/*.pyc
 
+lib/*/*.so
+
 data/*
 
 # vim
