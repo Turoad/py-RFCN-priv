@@ -319,7 +319,7 @@ layer {
   bottom: "conv5"
   bottom: "rois"
   top: "roi_pool_conv5"
-  roi_pooling_param {
+  roi_align_param {
     pooled_w: 6
     pooled_h: 6
     spatial_scale: 0.125 # 1/8
