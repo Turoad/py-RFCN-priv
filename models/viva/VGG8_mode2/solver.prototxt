@@ -1,8 +1,8 @@
-train_net: "models/viva/VGG8_roialign/train.prototxt"
+train_net: "models/viva/VGG8_mode2/train.prototxt"
 base_lr: 0.001
 lr_policy: "step"
 gamma: 0.1
-stepsize: 50000
+stepsize: 100000
 display: 20
 average_loss: 100
 # iter_size: 1
@@ -12,5 +12,5 @@ weight_decay: 0.0005
 # function
 snapshot: 0
 # We still use the snapshot prefix, though
-snapshot_prefix: "faster_rcnn_vgg8_roialign"
-iter_size: 2
+snapshot_prefix: "vgg8_mode2_faster_rcnn_viva"
+iter_size: 2 
