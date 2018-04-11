@@ -15,4 +15,4 @@ snapshot: 0
 
 snapshot_prefix: "zf8_roialign_faster_rcnn"
 
-iter_size: 4
+iter_size: 2 
