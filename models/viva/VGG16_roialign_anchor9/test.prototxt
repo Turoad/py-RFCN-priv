@@ -469,7 +469,7 @@ layer {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
     #param_str: "'feat_stride': 16"
-    param_str: "{'feat_stride': 8,'base_size':6, 'ratios':[0.5],'scales':[6., 5., 5.5, 8.5, 8., 10.5, 8, 3.5, 8.]}"
+    param_str: "{'feat_stride': 16,'base_size':6, 'ratios':[0.5],'scales':[6., 5., 5.5, 8.5, 8., 10.5, 8, 3.5, 8.]}"
   }
 }
 

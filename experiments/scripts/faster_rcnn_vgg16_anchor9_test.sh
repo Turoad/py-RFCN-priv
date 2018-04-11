@@ -13,7 +13,7 @@ set -e
 export PYTHONUNBUFFERED="True"
 
 GPU_ID=$1
-NET=VGG8_roialign_anchor9
+NET=VGG16_anchor9
 NET_lc=${NET,,}
 DATASET=viva
 
@@ -42,7 +42,7 @@ case $DATASET in
     TRAIN_IMDB="viva_trainval"
     TEST_IMDB="viva_test"
     PT_DIR="viva"
-    ITERS=10000
+    ITERS=2000
     ;;
   *)
     echo "No dataset given"
@@ -54,16 +54,8 @@ LOG="experiments/logs/faster_rcnn_end2end_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'
 exec &> >(tee -a "$LOG")
 echo Logging output to "$LOG"
 
-time ./tools/train_net.py --gpu ${GPU_ID} \
-  --solver models/${PT_DIR}/${NET}/solver.prototxt \
-  --weights data/imagenet_models/VGG16.v2.caffemodel \
-  --imdb ${TRAIN_IMDB} \
-  --iters ${ITERS} \
-  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
-  ${EXTRA_ARGS}
-set +x
-NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
-set -x
+#NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
+NET_FINAL='output/faster_rcnn_end2end/trainval/vgg16_anchor9_faster_rcnn_viva_iter_2000.caffemodel'
 
 time ./tools/test_net.py --gpu ${GPU_ID} \
   --def models/${PT_DIR}/${NET}/test.prototxt \
