@@ -13,4 +13,4 @@ weight_decay: 0.0005
 snapshot: 0
 # We still use the snapshot prefix, though
 snapshot_prefix: "vgg16_roialign_anchor9_faster_rcnn_viva"
-iter_size: 2 
+iter_size: 4 
