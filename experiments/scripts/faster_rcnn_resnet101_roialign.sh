@@ -13,7 +13,7 @@ set -e
 export PYTHONUNBUFFERED="True"
 
 GPU_ID=$1
-NET=ResNet-101
+NET=ResNet-101_roialign
 NET_lc=${NET,,}
 DATASET=viva
 

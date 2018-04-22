@@ -13,7 +13,7 @@ set -e
 export PYTHONUNBUFFERED="True"
 
 GPU_ID=$1
-NET=ResNet-101
+NET=ZF_anchor9_v2
 NET_lc=${NET,,}
 DATASET=viva
 
@@ -42,7 +42,7 @@ case $DATASET in
     TRAIN_IMDB="viva_trainval"
     TEST_IMDB="viva_test"
     PT_DIR="viva"
-    ITERS=300000
+    ITERS=160000
     ;;
   *)
     echo "No dataset given"
@@ -56,7 +56,7 @@ echo Logging output to "$LOG"
 
 time ./tools/train_net.py --gpu ${GPU_ID} \
   --solver models/${PT_DIR}/${NET}/solver.prototxt \
-  --weights data/imagenet_models/ResNet101_BN_SCALE_Merged.caffemodel \
+  --weights data/imagenet_models/ZF.v2.caffemodel \
   --imdb ${TRAIN_IMDB} \
   --iters ${ITERS} \
   --cfg experiments/cfgs/faster_rcnn_end2end.yml \
