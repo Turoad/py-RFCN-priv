@@ -208,8 +208,10 @@ class imdb(object):
             recalls[i] = (gt_overlaps >= t).sum() / float(num_pos)
         # ar = 2 * np.trapz(recalls, thresholds)
         ar = recalls.mean()
-        return {'ar': ar, 'recalls': recalls, 'thresholds': thresholds,
-                'gt_overlaps': gt_overlaps}
+        return ar, gt_overlaps, recalls, thresholds
+        # print 'ar=' , ar;
+        # return {'ar': ar, 'recalls': recalls, 'thresholds': thresholds,
+        #         'gt_overlaps': gt_overlaps}
 
     def create_roidb_from_box_list(self, box_list, gt_roidb):
         assert len(box_list) == self.num_images, \

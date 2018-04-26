@@ -5,7 +5,7 @@ input_shape {
   dim: 1
   dim: 3
   dim: 960 
-  dim: 1280
+  dim: 1280 
 }
 
 input: "im_info"
@@ -4284,7 +4284,6 @@ layer {
   bottom: 'rpn_bbox_pred'
   bottom: 'im_info'
   top: 'rois'
-  top: 'scores'
   python_param {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
@@ -4299,10 +4298,10 @@ layer {
   type: "ROIPooling"
   bottom: "res4b22"
   bottom: "rois"
-  top: "roi_pool5"
+  top: "pool5"
   roi_pooling_param {
-    pooled_w: 7 
-    pooled_h: 7 
+    pooled_w: 7
+    pooled_h: 7
     spatial_scale: 0.0625 # 1/16
   }
 }
@@ -4311,7 +4310,7 @@ layer {
 layer {
   name: "fc6"
   type: "InnerProduct"
-  bottom: "roi_pool5"
+  bottom: "pool5"
   top: "fc6"
   param {
     lr_mult: 1
