@@ -4,6 +4,8 @@
 lib/*/*.so
 
 data/*
+caffe-priv/src/caffe/FRCNN/*.cpp
+caffe-priv/src/caffe/FRCNN/*.cu
 
 # vim
 *.un~
