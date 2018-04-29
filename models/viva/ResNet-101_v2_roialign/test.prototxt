@@ -1,16 +1,17 @@
-name: "ResNet101"
+name: "ResNet101_BN_SCALE_Merged"
 
-layer {
-  name: 'input-data'
-  type: 'Python'
-  top: 'data'
-  top: 'im_info'
-  top: 'gt_boxes'
-  python_param {
-    module: 'roi_data_layer.layer'
-    layer: 'RoIDataLayer'
-    param_str: "'num_classes': 7"
-  }
+input: "data"
+input_shape {
+  dim: 1
+  dim: 3
+  dim: 960 
+  dim: 1280
+}
+
+input: "im_info"
+input_shape {
+  dim: 1
+  dim: 3
 }
 
 # ------------------------ conv1 -----------------------------
@@ -4261,51 +4262,6 @@ layer {
    reshape_param { shape { dim: 0 dim: 2 dim: -1 dim: 0 } }
 }
 
-layer {
-  name: 'rpn-data'
-  type: 'Python'
-  bottom: 'rpn_cls_score'
-  bottom: 'gt_boxes'
-  bottom: 'im_info'
-  bottom: 'data'
-  top: 'rpn_labels'
-  top: 'rpn_bbox_targets'
-  top: 'rpn_bbox_inside_weights'
-  top: 'rpn_bbox_outside_weights'
-  python_param {
-    module: 'rpn.anchor_target_layer'
-    layer: 'AnchorTargetLayer'
-    param_str: "'feat_stride': 16"
-  }
-}
-
-layer {
-  name: "rpn_loss_cls"
-  type: "SoftmaxWithLoss"
-  bottom: "rpn_cls_score_reshape"
-  bottom: "rpn_labels"
-  propagate_down: 1
-  propagate_down: 0
-  top: "rpn_cls_loss"
-  loss_weight: 1
-  loss_param {
-    ignore_label: -1
-    normalize: true
-  }
-}
-
-layer {
-  name: "rpn_loss_bbox"
-  type: "SmoothL1Loss"
-  bottom: "rpn_bbox_pred"
-  bottom: "rpn_bbox_targets"
-  bottom: 'rpn_bbox_inside_weights'
-  bottom: 'rpn_bbox_outside_weights'
-  top: "rpn_loss_bbox"
-  loss_weight: 1
-  smooth_l1_loss_param { sigma: 3.0 }
-}
-
 #========= RoI Proposal ============
 
 layer {
@@ -4314,7 +4270,6 @@ layer {
   bottom: "rpn_cls_score_reshape"
   top: "rpn_cls_prob"
 }
-
 layer {
   name: 'rpn_cls_prob_reshape'
   type: 'Reshape'
@@ -4322,15 +4277,14 @@ layer {
   top: 'rpn_cls_prob_reshape'
   reshape_param { shape { dim: 0 dim: 18 dim: -1 dim: 0 } }
 }
-
 layer {
   name: 'proposal'
   type: 'Python'
   bottom: 'rpn_cls_prob_reshape'
   bottom: 'rpn_bbox_pred'
   bottom: 'im_info'
-  top: 'rpn_rois'
-#  top: 'rpn_scores'
+  top: 'rois'
+  top: 'scores'
   python_param {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
@@ -4338,43 +4292,15 @@ layer {
   }
 }
 
-#layer {
-#  name: 'debug-data'
-#  type: 'Python'
-#  bottom: 'data'
-#  bottom: 'rpn_rois'
-#  bottom: 'rpn_scores'
-#  python_param {
-#    module: 'rpn.debug_layer'
-#    layer: 'RPNDebugLayer'
-#  }
-#}
-
-layer {
-  name: 'roi-data'
-  type: 'Python'
-  bottom: 'rpn_rois'
-  bottom: 'gt_boxes'
-  top: 'rois'
-  top: 'labels'
-  top: 'bbox_targets'
-  top: 'bbox_inside_weights'
-  top: 'bbox_outside_weights'
-  python_param {
-    module: 'rpn.proposal_target_layer'
-    layer: 'ProposalTargetLayer'
-    param_str: "'num_classes': 7"
-  }
-}
 
 #========= RCNN ============
 layer {
   name: "roi_pool5"
-  type: "ROIPooling"
+  type: "ROIAlign"
   bottom: "res4b22"
   bottom: "rois"
   top: "roi_pool5"
-  roi_pooling_param {
+  roi_align_param {
     pooled_w: 14 
     pooled_h: 14 
     spatial_scale: 0.0625 # 1/16
@@ -4433,6 +4359,7 @@ layer {
     }
 }
 
+
 layer {
     bottom: "res5a_branch2a"
     top: "res5a_branch2a"
@@ -4475,7 +4402,6 @@ layer {
     }
 }
 
-
 layer {
     bottom: "res5a_branch2b"
     top: "res5a_branch2b"
@@ -4517,7 +4443,6 @@ layer {
         lr_mult: 1.0
     }
 }
-
 
 layer {
     bottom: "res5a_branch2c"
@@ -4569,7 +4494,6 @@ layer {
     }
 }
 
-
 layer {
     bottom: "res5b_branch2a"
     top: "res5b_branch2a"
@@ -4611,7 +4535,6 @@ layer {
         lr_mult: 1.0
     }
 }
-
 
 layer {
     bottom: "res5b_branch2b"
@@ -4881,23 +4804,10 @@ layer {
     }
   }
 }
+
 layer {
-  name: "loss_cls"
-  type: "SoftmaxWithLoss"
+  name: "cls_prob"
+  type: "Softmax"
   bottom: "cls_score"
-  bottom: "labels"
-  propagate_down: 1
-  propagate_down: 0
-  top: "loss_cls"
-  loss_weight: 1
-}
-layer {
-  name: "loss_bbox"
-  type: "SmoothL1Loss"
-  bottom: "bbox_pred"
-  bottom: "bbox_targets"
-  bottom: "bbox_inside_weights"
-  bottom: "bbox_outside_weights"
-  top: "loss_bbox"
-  loss_weight: 1
+  top: "cls_prob"
 }

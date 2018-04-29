@@ -4370,11 +4370,11 @@ layer {
 #========= RCNN ============
 layer {
   name: "roi_pool5"
-  type: "ROIPooling"
+  type: "ROIAlign"
   bottom: "res4b22"
   bottom: "rois"
   top: "roi_pool5"
-  roi_pooling_param {
+  roi_align_param {
     pooled_w: 14 
     pooled_h: 14 
     spatial_scale: 0.0625 # 1/16
