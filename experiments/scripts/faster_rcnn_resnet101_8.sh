@@ -13,7 +13,7 @@ set -e
 export PYTHONUNBUFFERED="True"
 
 GPU_ID=$1
-NET=ResNet-101
+NET=ResNet-101_8
 NET_lc=${NET,,}
 DATASET=viva
 
@@ -42,7 +42,7 @@ case $DATASET in
     TRAIN_IMDB="viva_trainval"
     TEST_IMDB="viva_test"
     PT_DIR="viva"
-    ITERS=3000
+    ITERS=160000
     ;;
   *)
     echo "No dataset given"
@@ -56,10 +56,10 @@ echo Logging output to "$LOG"
 
 time ./tools/train_net.py --gpu ${GPU_ID} \
   --solver models/${PT_DIR}/${NET}/solver.prototxt \
-  --weights data/imagenet_models/ResNet101_fused.caffemodel \
+  --weights data/imagenet_models/ResNet101_BN_SCALE_Merged.caffemodel \
   --imdb ${TRAIN_IMDB} \
   --iters ${ITERS} \
-  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
+  --cfg experiments/cfgs/faster_rcnn_end2end_resnet.yml \
   ${EXTRA_ARGS}
 set +x
 NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
@@ -69,5 +69,5 @@ time ./tools/test_net.py --gpu ${GPU_ID} \
   --def models/${PT_DIR}/${NET}/test.prototxt \
   --net ${NET_FINAL} \
   --imdb ${TEST_IMDB} \
-  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
+  --cfg experiments/cfgs/faster_rcnn_end2end_resnet.yml \
   ${EXTRA_ARGS}

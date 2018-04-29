@@ -12,8 +12,8 @@ set -e
 
 export PYTHONUNBUFFERED="True"
 
-GPU_ID=$1
-NET=ResNet-101
+NET=ZF8
+MODEL=zf8
 NET_lc=${NET,,}
 DATASET=viva
 
@@ -42,7 +42,7 @@ case $DATASET in
     TRAIN_IMDB="viva_trainval"
     TEST_IMDB="viva_test"
     PT_DIR="viva"
-    ITERS=3000
+    ITERS=160000
     ;;
   *)
     echo "No dataset given"
@@ -50,24 +50,13 @@ case $DATASET in
     ;;
 esac
 
-LOG="experiments/logs/faster_rcnn_end2end_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'%Y-%m-%d_%H-%M-%S'`"
-exec &> >(tee -a "$LOG")
-echo Logging output to "$LOG"
+# LOG="experiments/logs/faster_rcnn_eval_recall_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'%Y-%m-%d_%H-%M-%S'`"
+# exec &> >(tee -a "$LOG")
+# echo Logging output to "$LOG"
 
-time ./tools/train_net.py --gpu ${GPU_ID} \
-  --solver models/${PT_DIR}/${NET}/solver.prototxt \
-  --weights data/imagenet_models/ResNet101_fused.caffemodel \
-  --imdb ${TRAIN_IMDB} \
-  --iters ${ITERS} \
-  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
-  ${EXTRA_ARGS}
-set +x
-NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
-set -x
-
-time ./tools/test_net.py --gpu ${GPU_ID} \
-  --def models/${PT_DIR}/${NET}/test.prototxt \
-  --net ${NET_FINAL} \
+NET_FINAL="output/faster_rcnn_end2end/trainval/${MODEL}_faster_rcnn_iter_160000.caffemodel" 
+time ./tools/eval_recall.py \
   --imdb ${TEST_IMDB} \
-  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
+  --method rpn \
+  --rpn-file  output/faster_rcnn_end2end/test/${MODEL}_faster_rcnn_iter_160000/${MODEL}_faster_rcnn_iter_160000_rpn_proposals.pkl \
   ${EXTRA_ARGS}

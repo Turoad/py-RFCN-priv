@@ -1085,7 +1085,7 @@ layer {
         num_output: 1024
         kernel_size: 1
         pad: 0
-        stride: 2
+        stride: 1 
         bias_term: false
     }
     param {
@@ -1120,7 +1120,7 @@ layer {
         num_output: 256
         kernel_size: 1
         pad: 0
-        stride: 2
+        stride: 1 
         bias_term: false
     }
     param {
@@ -4275,7 +4275,7 @@ layer {
   python_param {
     module: 'rpn.anchor_target_layer'
     layer: 'AnchorTargetLayer'
-    param_str: "'feat_stride': 16"
+    param_str: "'feat_stride': 8"
   }
 }
 
@@ -4334,7 +4334,7 @@ layer {
   python_param {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
-    param_str: "'feat_stride': 16"
+    param_str: "'feat_stride': 8"
   }
 }
 
@@ -4370,14 +4370,14 @@ layer {
 #========= RCNN ============
 layer {
   name: "roi_pool5"
-  type: "ROIPooling"
+  type: "ROIAlign"
   bottom: "res4b22"
   bottom: "rois"
   top: "roi_pool5"
-  roi_pooling_param {
-    pooled_w: 28 
-    pooled_h: 28 
-    spatial_scale: 0.0625 # 1/16
+  roi_align_param {
+    pooled_w: 14
+    pooled_h: 14
+    spatial_scale: 0.125 # 1/8
   }
 }
 
