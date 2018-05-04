@@ -428,7 +428,7 @@ layer {
   python_param {
     module: 'rpn.anchor_target_layer'
     layer: 'AnchorTargetLayer'
-    param_str: "{'feat_stride': 8,'base_size':6, 'ratios':[2],'scales':[6., 5., 5.5, 8.5, 8., 10.5, 8, 3.5, 8.]}"
+    param_str: "{'feat_stride': 8,'base_size':6, 'ratios':[1.,1.5,2.],'scales':[4., 6., 9.]}"
   }
 }
 
@@ -487,7 +487,7 @@ layer {
   python_param {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
-    param_str: "{'feat_stride': 8,'base_size':6, 'ratios':[2],'scales':[6., 5., 5.5, 8.5, 8., 10.5, 8, 3.5, 8.]}"
+    param_str: "{'feat_stride': 8,'base_size':6, 'ratios':[1.,1.5,2.],'scales':[4., 6., 9.]}"
   }
 }
 
