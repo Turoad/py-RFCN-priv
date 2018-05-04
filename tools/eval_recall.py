@@ -56,6 +56,11 @@ if __name__ == '__main__':
         assert np.isclose(thresholds[ind], t)
         return recalls[ind]
 
+    print ""
+    for i in thresholds:
+        print '{:.4f},'.format(recall_at(i)),
+    print ""
+
     print 'Recall@0.5: {:.3f}'.format(recall_at(0.5))
     print 'Recall@0.6: {:.3f}'.format(recall_at(0.6))
     print 'Recall@0.7: {:.3f}'.format(recall_at(0.7))
