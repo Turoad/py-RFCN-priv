@@ -2,6 +2,7 @@
 */*/*.pyc
 
 lib/*/*.so
+final_models/*
 
 data/*
 caffe-priv/src/caffe/FRCNN/*.cpp
