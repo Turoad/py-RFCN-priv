@@ -8,10 +8,10 @@ TRAIN:
   PROPOSAL_METHOD: gt
   BG_THRESH_LO: 0.0
   SCALES:
-    - 960 
-  MAX_SIZE: 1280
+    - 600 
+  MAX_SIZE: 800 
 TEST:
   HAS_RPN: True
   SCALES:
-    - 960 
-  MAX_SIZE: 1280
+    - 600 
+  MAX_SIZE: 800 
