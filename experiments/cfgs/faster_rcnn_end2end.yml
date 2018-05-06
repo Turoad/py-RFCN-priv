@@ -12,3 +12,6 @@ TRAIN:
   MAX_SIZE: 1280
 TEST:
   HAS_RPN: True
+  SCALES:
+    - 960 
+  MAX_SIZE: 1280
