@@ -13,8 +13,8 @@ set -e
 export PYTHONUNBUFFERED="True"
 
 GPU_ID=$1
-NET=VGG8_mode2
-MODEL=vgg8_mode2
+NET=VGG8_roialign_anchor9_v2
+MODEL=vgg8_roialign_anchor9_v2
 NET_lc=${NET,,}
 DATASET=viva
 
