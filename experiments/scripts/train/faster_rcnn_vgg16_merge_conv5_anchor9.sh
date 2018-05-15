@@ -13,8 +13,7 @@ set -e
 export PYTHONUNBUFFERED="True"
 
 GPU_ID=$1
-NET=VGG8_mode2
-MODEL=vgg8_mode2
+NET=VGG16_merge_conv5_anchor9
 NET_lc=${NET,,}
 DATASET=viva
 
@@ -51,14 +50,23 @@ case $DATASET in
     ;;
 esac
 
-LOG="experiments/logs/faster_rcnn_rpn_generate_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'%Y-%m-%d_%H-%M-%S'`"
+LOG="experiments/logs/faster_rcnn_end2end_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'%Y-%m-%d_%H-%M-%S'`"
 exec &> >(tee -a "$LOG")
 echo Logging output to "$LOG"
 
-NET_FINAL="output/faster_rcnn_end2end/trainval/${MODEL}_faster_rcnn_viva_iter_160000.caffemodel"
+time ./tools/train_net.py --gpu ${GPU_ID} \
+  --solver models/${PT_DIR}/${NET}/solver.prototxt \
+  --weights data/imagenet_models/VGG16.v2.caffemodel \
+  --imdb ${TRAIN_IMDB} \
+  --iters ${ITERS} \
+  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
+  ${EXTRA_ARGS}
+set +x
+NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
+set -x
 
-time ./tools/rpn_generate.py --gpu ${GPU_ID} \
-  --def models/${PT_DIR}/${NET}/rpn.prototxt \
+time ./tools/test_net.py --gpu ${GPU_ID} \
+  --def models/${PT_DIR}/${NET}/test.prototxt \
   --net ${NET_FINAL} \
   --imdb ${TEST_IMDB} \
   --cfg experiments/cfgs/faster_rcnn_end2end.yml \
