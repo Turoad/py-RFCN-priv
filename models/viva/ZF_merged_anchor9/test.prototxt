@@ -284,7 +284,7 @@ layer {
   python_param {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
-    param_str: "'feat_stride': 8"
+    param_str: "{'feat_stride': 8,'base_size':6, 'ratios':[1.,1.5,2.],'scales':[4., 6., 9.]}"
   }
 }
 

@@ -53,9 +53,8 @@ layer {
 	bottom: "norm1"
 	top: "pool1"
 	pooling_param {
-		kernel_size: 3
+		kernel_size:2 
 		stride: 2
-		pad: 1
 		pool: MAX
 	}
 }
@@ -98,9 +97,8 @@ layer {
 	bottom: "norm2"
 	top: "pool2"
 	pooling_param {
-		kernel_size: 3
+		kernel_size:2 
 		stride: 2
-		pad: 1
 		pool: MAX
 	}
 }
@@ -165,12 +163,65 @@ layer {
 	top: "conv5"
 }
 
+layer {
+	name: "conv4_3_new"
+	bottom: "norm2"
+	top: "conv4_3_new"
+	param {
+		lr_mult: 1.0
+	}
+	param {
+		lr_mult: 2.0
+	}
+	type: "Convolution"
+	convolution_param {
+		num_output: 256 
+		kernel_size: 1
+		weight_filler { type: "gaussian" std: 0.001 }
+		bias_filler { type: "constant" value: 0.0 }
+	}
+}
+
+layer {
+  name: "upC5"
+  type: "Deconvolution"
+  bottom: "conv5"
+  top: "upC5"
+  convolution_param {
+    kernel_h : 4
+    kernel_w : 4
+    stride_h: 2
+    stride_w: 2
+    pad_h: 1
+    pad_w: 1
+    num_output: 256 
+    group: 256 
+    bias_term: false
+    weight_filler {
+      type: "bilinear"
+    }
+  }
+  param { lr_mult: 0 decay_mult: 0 } 
+}
+
+layer {
+  name: "conv5_3_merged"
+  type: "Eltwise"
+  bottom: "upC5"
+  bottom: "conv4_3_new"
+  top: "conv5_3_merged"
+  eltwise_param {
+    operation: SUM
+  }
+}
+
+
 #========= RPN ============
 
 layer {
   name: "rpn_conv/3x3"
   type: "Convolution"
-  bottom: "conv5"
+  bottom:"conv5_3_merged"
   top: "rpn/output"
   param { lr_mult: 1.0 }
   param { lr_mult: 2.0 }
@@ -237,7 +288,7 @@ layer {
   python_param {
     module: 'rpn.anchor_target_layer'
     layer: 'AnchorTargetLayer'
-    param_str: "'feat_stride': 16"
+    param_str: "'feat_stride': 8"
   }
 }
 layer {
@@ -291,7 +342,7 @@ layer {
   python_param {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
-    param_str: "'feat_stride': 16"
+    param_str: "'feat_stride': 8"
   }
 }
 layer {
@@ -316,13 +367,13 @@ layer {
 layer {
   name: "roi_pool_conv5"
   type: "ROIPooling"
-  bottom: "conv5"
+  bottom: "conv5_3_merged"
   bottom: "rois"
   top: "roi_pool_conv5"
   roi_pooling_param {
     pooled_w: 6
     pooled_h: 6
-    spatial_scale: 0.0625 # 1/16
+    spatial_scale: 0.125 # 1/8
   }
 }
 layer {

@@ -284,7 +284,7 @@ layer {
   python_param {
     module: 'rpn.proposal_layer'
     layer: 'ProposalLayer'
-    param_str: "'feat_stride': 8"
+    param_str: "{'feat_stride': 8,'base_size':6, 'ratios':[1.,1.5,2.],'scales':[4., 6., 9.]}"
   }
 }
 
@@ -292,11 +292,11 @@ layer {
 
 layer {
   name: "roi_pool_conv5"
-  type: "ROIPooling"
+  type: "ROIAlign"
   bottom: "conv5_3_merged"
   bottom: "rois"
   top: "roi_pool_conv5"
-  roi_pooling_param {
+  roi_align_param {
     pooled_w: 6
     pooled_h: 6
     spatial_scale: 0.125 # 1/8

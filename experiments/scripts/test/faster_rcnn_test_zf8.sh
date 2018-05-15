@@ -13,8 +13,8 @@ set -e
 export PYTHONUNBUFFERED="True"
 
 GPU_ID=$1
-NET=VGG16_anchor9
-MODEL=vgg16_anchor9
+NET=ZF8
+MODEL=zf8
 NET_lc=${NET,,}
 DATASET=viva
 
@@ -43,7 +43,7 @@ case $DATASET in
     TRAIN_IMDB="viva_trainval"
     TEST_IMDB="viva_test"
     PT_DIR="viva"
-    ITERS=2000
+    ITERS=160000
     ;;
   *)
     echo "No dataset given"
@@ -51,11 +51,11 @@ case $DATASET in
     ;;
 esac
 
-LOG="experiments/logs/faster_rcnn_end2end_test_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'%Y-%m-%d_%H-%M-%S'`"
+LOG="experiments/logs/faster_rcnn_end2end_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'%Y-%m-%d_%H-%M-%S'`"
 exec &> >(tee -a "$LOG")
 echo Logging output to "$LOG"
 
-NET_FINAL=output/faster_rcnn_end2end/trainval/${MODEL}_faster_rcnn_viva_iter_160000.caffemodel
+NET_FINAL=final_models/${MODEL}_faster_rcnn_viva_iter_160000.caffemodel
 
 time ./tools/test_net.py --gpu ${GPU_ID} \
   --def models/${PT_DIR}/${NET}/test.prototxt \

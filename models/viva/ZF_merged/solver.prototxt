@@ -1,4 +1,4 @@
-train_net: "models/viva/ZF/train.prototxt"
+train_net: "models/viva/ZF_merged/train.prototxt"
 
 base_lr: 0.001
 lr_policy: "step"
@@ -13,6 +13,6 @@ weight_decay: 0.0005
 snapshot: 0
 # We still use the snapshot prefix, though
 
-snapshot_prefix: "zf_faster_rcnn"
+snapshot_prefix: "zf_merged_faster_rcnn"
 
 iter_size: 2
