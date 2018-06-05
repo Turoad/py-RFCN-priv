@@ -24,12 +24,6 @@ import scipy.io as sio
 import caffe, os, sys, cv2
 import argparse
 
-CLASSES = ('__background__',
-           'aeroplane', 'bicycle', 'bird', 'boat',
-           'bottle', 'bus', 'car', 'cat', 'chair',
-           'cow', 'diningtable', 'dog', 'horse',
-           'motorbike', 'person', 'pottedplant',
-           'sheep', 'sofa', 'train', 'tvmonitor')
 
 CLASSES = ('__background__',
            'red', 'redLeft', 'green',
@@ -77,7 +71,7 @@ def demo(net, image_name):
     """Detect object classes in an image using pre-computed object proposals."""
 
     # Load the demo image
-    im_file = os.path.join('data/dayTrain/dayClip8/frames', image_name)
+    im_file = os.path.join('data/dayClip8/frames', image_name)
     # im_file = image_name
     im = cv2.imread(im_file)
 
@@ -93,7 +87,7 @@ def demo(net, image_name):
     # Visualize detections for each class
     CONF_THRESH = 0.8
     NMS_THRESH = 0.3
-    plt.switch_backend('agg')
+    #plt.switch_backend('agg')
     plt.axis('off')
     plt.xticks([])
     plt.yticks([])
@@ -163,8 +157,8 @@ if __name__ == '__main__':
     # for i in xrange(2):
     #     _, _= im_detect(net, im)
 
-    # im_names = ['dayClip8--00000.png' ]
-    im_names = os.listdir('data/dayTrain/dayClip8/frames/')
+    im_names = ['dayClip8--00000.png' ]
+    # im_names = os.listdir('data/dayTrain/dayClip8/frames/')
     for im_name in im_names:
         print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
         print 'Demo for data/demo/{}'.format(im_name)
@@ -173,6 +167,6 @@ if __name__ == '__main__':
 	plt.gca().yaxis.set_major_locator(plt.NullLocator())
 	plt.subplots_adjust(top = 1, bottom = 0, right=1,left=0, hspace =0 ,wspace=0)
         plt.margins(0, 0)
-        plt.savefig('testimgs/'+im_name, format='png',pad_inches = 0)
+    #    plt.savefig('testimgs/'+im_name, format='png',pad_inches = 0)
 
-    # plt.show()
+    plt.show()
